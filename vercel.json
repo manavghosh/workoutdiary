@@ -12,11 +12,5 @@
   "env": {
   },
   "build": {
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/$1"
-    }
-  ]
+  }
 }
