@@ -102,11 +102,13 @@ npx drizzle-kit studio
 - **`eslint.config.mjs`** - ESLint configuration
 - **`postcss.config.mjs`** - PostCSS configuration for Tailwind
 
+## Key Architectural Reference Docs
 - /docs/auth.md
 - /docs/data-fetching.md
 - /docs/data-mutations.md
 - /docs/ui.md
 - /docs/server-components.md
+- /docs/routing.md
 
 ## Critical Development Rules
 
