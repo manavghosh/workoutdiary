@@ -67,7 +67,9 @@
       "Bash(git ls-tree:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "mcp__vercel__list_projects",
+      "Bash(vercel env ls:*)"
     ],
     "deny": [],
     "ask": []
