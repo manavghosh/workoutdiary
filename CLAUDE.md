@@ -1,0 +1,1 @@
+- refer to all the design documents in /docs folder before generating any code
