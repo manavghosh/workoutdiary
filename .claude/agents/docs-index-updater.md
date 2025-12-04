@@ -2,7 +2,7 @@
 name: docs-index-updater
 description: Use this agent when a new documentation file has been added to the /docs directory and needs to be referenced in the Claude.md file. Examples: <example>Context: User has just created a new API documentation file at /docs/api-endpoints.md and needs it indexed in Claude.md. user: 'I just added /docs/api-endpoints.md to document our REST API endpoints' assistant: 'I'll use the docs-index-updater agent to add this new documentation file to the Claude.md index under the Key Architectural Reference Docs section.' <commentary>Since a new documentation file was added to /docs, use the docs-index-updater agent to update the Claude.md file accordingly.</commentary></example> <example>Context: User has finished writing a database schema guide and saved it as /docs/database-schema.md. user: 'Finished the database schema documentation, it's saved as /docs/database-schema.md' assistant: 'Let me use the docs-index-updater agent to ensure this new file is properly referenced in Claude.md.' <commentary>A new documentation file was created in /docs directory, so use the docs-index-updater agent to update the Claude.md file.</commentary></example>
 tools: Edit, Write, NotebookEdit, Glob, Grep, Read, WebFetch, TodoWrite, WebSearch, BashOutput, ListMcpResourcesTool, ReadMcpResourceTool
-model: sonnet
+model: GLM 4.6
 color: blue
 ---
 
