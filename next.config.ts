@@ -33,6 +33,28 @@ const nextConfig: NextConfig = {
             value: 'strict-origin-when-cross-origin'
           }
         ]
+      },
+      // CORS headers for Clerk
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: 'https://workoutdiary-wigy.vercel.app, https://super-molly-85.accounts.dev, http://localhost:3000'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, OPTIONS, POST, PUT, DELETE'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization, X-Requested-With'
+          },
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true'
+          }
+        ]
       }
     ];
   }
