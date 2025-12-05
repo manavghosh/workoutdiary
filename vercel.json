@@ -10,6 +10,8 @@
     }
   },
   "rewrites": [
+    { "source": "/workout/(.*)", "destination": "/workout/$1" },
+    { "source": "/dashboard/(.*)", "destination": "/dashboard/$1" },
     { "source": "/(.*)", "destination": "/" }
   ],
   "env": {
