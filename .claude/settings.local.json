@@ -69,7 +69,8 @@
       "Bash(mv:*)",
       "Bash(rmdir:*)",
       "mcp__vercel__list_projects",
-      "Bash(vercel env ls:*)"
+      "Bash(vercel env ls:*)",
+      "Bash(git clean:*)"
     ],
     "deny": [],
     "ask": []
