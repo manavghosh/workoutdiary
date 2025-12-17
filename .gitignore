@@ -17,6 +17,9 @@ build/
 .env.test.local
 .env.production.local
 
+# MCP configuration (contains API keys)
+.mcp.json
+
 # Vercel
 .vercel
 
@@ -51,3 +54,6 @@ coverage/
 nul
 next-env.d.ts
 next-env.d.ts
+data/cipher-sessions.db
+data/cipher-sessions.db-shm
+data/cipher-sessions.db-wal
