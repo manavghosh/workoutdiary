@@ -49,3 +49,5 @@ coverage/
 *.json.bak
 *.json.tmp
 nul
+next-env.d.ts
+next-env.d.ts
