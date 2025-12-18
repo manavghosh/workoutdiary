@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Clock, Save, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BackToDashboardButton } from "@/components/BackToDashboardButton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,21 +85,14 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Back to Dashboard */}
+        <BackToDashboardButton />
+
         {/* Header */}
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => router.push("/dashboard")}
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back to Dashboard
-                </Button>
-                <CardTitle>Log New Workout</CardTitle>
-              </div>
+              <CardTitle>Log New Workout</CardTitle>
               <Button
                 onClick={handleSaveWorkout}
                 disabled={isPending || !title.trim()}
