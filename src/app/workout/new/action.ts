@@ -65,6 +65,11 @@ export async function createWorkoutAction(data: z.infer<typeof CreateWorkoutSche
     })
 
     console.log('Workout created:', workout)
+
+    if (!workout) {
+      throw new Error('Failed to create workout - no workout returned')
+    }
+
     console.log('Workout startedAt date:', workout.startedAt)
 
     // Format date for redirect

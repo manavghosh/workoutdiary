@@ -57,3 +57,4 @@ next-env.d.ts
 data/cipher-sessions.db
 data/cipher-sessions.db-shm
 data/cipher-sessions.db-wal
+.claude/settings.local.json

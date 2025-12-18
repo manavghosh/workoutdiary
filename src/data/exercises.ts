@@ -1,8 +1,6 @@
 import { db } from '@/lib/db'
-import { exercises } from '@/lib/db'
-import { eq } from 'drizzle-orm'
-import { sql } from 'drizzle-orm'
-import type { Exercise } from '@/lib/db'
+import { exercises, type Exercise } from '@/db/schema'
+import { eq, sql } from 'drizzle-orm'
 
 type ExerciseCategory = 'strength' | 'cardio' | 'flexibility' | 'sports'
 
@@ -15,34 +13,35 @@ const getExerciseByIdStmt = db
   .prepare('getExerciseById')
 
 export async function getExerciseById(exerciseId: string) {
-  const exercise = await getExerciseByIdStmt.execute({ exerciseId })
-
-  return exercise.length > 0 ? exercise[0] : null
+  try {
+    const exercise = await getExerciseByIdStmt.execute({ exerciseId });
+    return exercise.length > 0 ? exercise[0] : null;
+  } catch (error) {
+    console.error('Error fetching exercise by ID:', error);
+    return null;
+  }
 }
 
 // Cached result for all exercises since this is a master library that rarely changes
-let allExercisesCache: Exercise[] | null = null
-let cacheTimestamp: number | null = null
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+let allExercisesCache: Exercise[] | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export async function getAllExercises() {
-  // Note: This function returns all exercises from the master exercise library
-  // User-specific filtering happens at the workout level
-
-  // Return cached result if still valid
-  const now = Date.now()
+  const now = Date.now();
   if (allExercisesCache && cacheTimestamp && (now - cacheTimestamp) < CACHE_TTL) {
-    return allExercisesCache
+    return allExercisesCache;
   }
 
-  // Fresh fetch
-  const allExercises = await db.select().from(exercises)
-
-  // Update cache
-  allExercisesCache = allExercises
-  cacheTimestamp = now
-
-  return allExercises
+  try {
+    const allExercises = await db.select().from(exercises);
+    allExercisesCache = allExercises;
+    cacheTimestamp = now;
+    return allExercises;
+  } catch (error) {
+    console.error('Error fetching all exercises:', error);
+    return [];
+  }
 }
 
 // Prepared statement for getting exercises by category
@@ -53,7 +52,11 @@ const getExercisesByCategoryStmt = db
   .prepare('getExercisesByCategory')
 
 export async function getExercisesByCategory(category: ExerciseCategory) {
-  const categoryExercises = await getExercisesByCategoryStmt.execute({ category })
-
-  return categoryExercises
+  try {
+    const categoryExercises = await getExercisesByCategoryStmt.execute({ category });
+    return categoryExercises;
+  } catch (error) {
+    console.error('Error fetching exercises by category:', error);
+    return [];
+  }
 }

@@ -1,7 +1,6 @@
 import { db } from '@/lib/db'
-import { workouts, workoutExercises } from '@/lib/db'
-import { eq, sum, count, gte, lte, and } from 'drizzle-orm'
-import { sql } from 'drizzle-orm'
+import { workouts, workoutExercises } from '@/db/schema'
+import { eq, sum, count, gte, lte, and, sql } from 'drizzle-orm'
 
 // Prepared statement for user workout statistics (all time)
 const getUserWorkoutStatsAllTimeStmt = db
@@ -33,26 +32,32 @@ const getUserWorkoutStatsByDateRangeStmt = db
   .prepare('getUserWorkoutStatsByDateRange')
 
 export async function getUserWorkoutStats(userId: string, startDate?: Date, endDate?: Date) {
-  // Get user's workout statistics
-  if (startDate && endDate) {
-    // Date-specific statistics - workouts only
-    const stats = await getUserWorkoutStatsByDateRangeStmt.execute({
-      userId,
-      startDate,
-      endDate
-    })
-    return stats[0] || {
+  try {
+    if (startDate && endDate) {
+      const stats = await getUserWorkoutStatsByDateRangeStmt.execute({
+        userId,
+        startDate,
+        endDate
+      });
+      return stats[0] || {
+        totalWorkouts: 0,
+        totalDuration: 0,
+        averageDuration: 0
+      };
+    } else {
+      const stats = await getUserWorkoutStatsAllTimeStmt.execute({ userId });
+      return stats[0] || {
+        totalWorkouts: 0,
+        totalDuration: 0,
+        averageDuration: 0
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching user workout stats:', error);
+    return {
       totalWorkouts: 0,
       totalDuration: 0,
       averageDuration: 0
-    }
-  } else {
-    // All-time statistics - workouts only
-    const stats = await getUserWorkoutStatsAllTimeStmt.execute({ userId })
-    return stats[0] || {
-      totalWorkouts: 0,
-      totalDuration: 0,
-      averageDuration: 0
-    }
+    };
   }
 }
