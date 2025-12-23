@@ -11,11 +11,7 @@ export function DashboardLinkButton() {
 
   const handleNavigationWithLoading = () => {
     setIsNavigating(true);
-
-    // Keep loading visible for minimum 2 seconds
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
+    router.push("/dashboard");
   };
 
   return (

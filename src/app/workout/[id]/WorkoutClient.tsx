@@ -63,9 +63,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
 
         const result = await updateWorkoutAction(workout.id, updateData)
 
-        // Keep loading visible for minimum 2 seconds
-        await new Promise(resolve => setTimeout(resolve, 2000))
-
         if (result.success) {
           setIsEditing(false)
           // Refresh the page to show updated data
@@ -87,9 +84,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
     startTransition(async () => {
       try {
         const result = await deleteWorkoutAction(workout.id)
-
-        // Keep loading visible for minimum 2 seconds
-        await new Promise(resolve => setTimeout(resolve, 2000))
 
         if (result.success) {
           // Redirect to dashboard after successful deletion
@@ -118,9 +112,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
     startTransition(async () => {
       try {
         const result = await completeWorkoutAction(workout.id, { durationMinutes: duration })
-
-        // Keep loading visible for minimum 2 seconds
-        await new Promise(resolve => setTimeout(resolve, 2000))
 
         if (result.success) {
           setShowCompleteDialog(false)
@@ -151,7 +142,7 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Back to Dashboard */}
-        <BackToDashboardButton />
+        <BackToDashboardButton onNavigate={() => setIsNavigating(true)} />
 
         {/* Header */}
         <Card className="mb-6">

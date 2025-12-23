@@ -78,11 +78,7 @@ export default function DashboardClient({
   // Handle navigation with loading overlay
   const handleNavigationWithLoading = (path: string) => {
     setIsNavigating(true);
-
-    // Keep loading visible for minimum 2 seconds
-    setTimeout(() => {
-      router.push(path);
-    }, 2000);
+    router.push(path);
   };
 
   return (
