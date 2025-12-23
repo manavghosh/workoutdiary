@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 
 interface LoadingOverlayProps {
@@ -14,6 +14,7 @@ export function LoadingOverlay({ isLoading }: LoadingOverlayProps) {
         className="flex flex-col items-center gap-4 border-none bg-transparent shadow-none"
         aria-describedby="loading-description"
       >
+        <DialogTitle className="sr-only">Loading</DialogTitle>
         <div
           className="flex flex-col items-center gap-4 p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl"
           role="status"
