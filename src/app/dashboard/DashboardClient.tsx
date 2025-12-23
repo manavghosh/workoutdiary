@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Calendar } from "@/components/ui/calendar";
 import { formatDateWithOrdinal } from "@/lib/utils";
 import { StatCard } from "@/components/StatCard";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { useRouter } from "next/navigation";
 import type { WorkoutExercise, Exercise, ExerciseSet } from "@/db/schema";
 
@@ -52,6 +53,7 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const router = useRouter();
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Use selectedDate prop directly, fallback to today if null
   const displayDate = selectedDate || new Date();
@@ -73,9 +75,21 @@ export default function DashboardClient({
     router.push("/dashboard");
   };
 
+  // Handle navigation with loading overlay
+  const handleNavigationWithLoading = (path: string) => {
+    setIsNavigating(true);
+
+    // Keep loading visible for minimum 2 seconds
+    setTimeout(() => {
+      router.push(path);
+    }, 2000);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <>
+      <LoadingOverlay isLoading={isNavigating} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header with Date Picker */}
         <Card className="mb-6">
           <CardHeader>
@@ -85,7 +99,7 @@ export default function DashboardClient({
               </CardTitle>
               <Button onClick={() => {
                 const formattedDate = format(displayDate, "yyyy-MM-dd");
-                router.push(`/workout/new?date=${formattedDate}`);
+                handleNavigationWithLoading(`/workout/new?date=${formattedDate}`);
               }}>
                 <Plus className="w-4 h-4 mr-2" />
                 Log Workout
@@ -191,7 +205,7 @@ export default function DashboardClient({
                 <CardDescription className="mb-6">
                   No workouts found for this date. Start by logging your first workout!
                 </CardDescription>
-                <Button onClick={() => router.push('/workout/new')}>
+                <Button onClick={() => handleNavigationWithLoading('/workout/new')}>
                   Log Your First Workout
                 </Button>
               </div>
@@ -218,7 +232,7 @@ export default function DashboardClient({
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => router.push(`/workout/${workout.id}`)}
+                      onClick={() => handleNavigationWithLoading(`/workout/${workout.id}`)}
                     >
                       Edit
                     </Button>
@@ -268,7 +282,8 @@ export default function DashboardClient({
             ))
           )}
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

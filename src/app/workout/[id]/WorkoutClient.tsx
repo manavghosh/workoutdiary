@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Edit, Save, Trash2, Play, Clock, Calendar, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BackToDashboardButton } from '@/components/BackToDashboardButton'
+import { LoadingOverlay } from '@/components/LoadingOverlay'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -27,6 +28,7 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showCompleteDialog, setShowCompleteDialog] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   // Edit state
   const [editTitle, setEditTitle] = useState(workoutData.workout.title)
@@ -45,6 +47,8 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       return
     }
 
+    setIsNavigating(true)
+
     startTransition(async () => {
       try {
         const updateData: any = {
@@ -59,6 +63,9 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
 
         const result = await updateWorkoutAction(workout.id, updateData)
 
+        // Keep loading visible for minimum 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
         if (result.success) {
           setIsEditing(false)
           // Refresh the page to show updated data
@@ -68,23 +75,32 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to update workout')
+      } finally {
+        setIsNavigating(false)
       }
     })
   }
 
   const handleDeleteWorkout = () => {
+    setIsNavigating(true)
+
     startTransition(async () => {
       try {
         const result = await deleteWorkoutAction(workout.id)
+
+        // Keep loading visible for minimum 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
         if (result.success) {
           // Redirect to dashboard after successful deletion
           router.push('/dashboard')
         } else {
           alert('Failed to delete workout')
+          setIsNavigating(false)
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to delete workout')
+        setIsNavigating(false)
       }
     })
   }
@@ -97,9 +113,14 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       return
     }
 
+    setIsNavigating(true)
+
     startTransition(async () => {
       try {
         const result = await completeWorkoutAction(workout.id, { durationMinutes: duration })
+
+        // Keep loading visible for minimum 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
         if (result.success) {
           setShowCompleteDialog(false)
@@ -111,6 +132,8 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to complete workout')
+      } finally {
+        setIsNavigating(false)
       }
     })
   }
@@ -123,8 +146,10 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <>
+      <LoadingOverlay isLoading={isNavigating} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Back to Dashboard */}
         <BackToDashboardButton />
 
@@ -415,7 +440,8 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
             </CardContent>
           </Card>
         )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

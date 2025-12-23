@@ -41,25 +41,16 @@
       "Bash(xxd:*)",
       "mcp__exa__web_search_exa",
       "Bash(rm:*)",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_fill_form",
-      "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_close",
       "Bash(npm i:*)",
       "mcp__neon__search",
       "mcp__neon__prepare_database_migration",
       "Bash(npm run)",
-      "mcp__playwright__browser_press_key",
-      "mcp__playwright__browser_run_code",
       "mcp__Ref__ref_search_documentation",
       "mcp__Ref__ref_read_url",
       "Bash(npm run dev:*)",
       "Bash(kill:*)",
       "Bash(timeout 10 npm run build:*)",
       "Bash(dir:*)",
-      "mcp__playwright__browser_type",
       "Bash(npm run lint)",
       "Bash(npm ls:*)",
       "Bash(npm uninstall:*)",
@@ -70,9 +61,17 @@
       "Bash(rmdir:*)",
       "mcp__vercel__list_projects",
       "Bash(vercel env ls:*)",
-      "Bash(git clean:*)"
+      "Bash(git clean:*)",
+      "Bash(claude mcp:*)",
+      "mcp__exa__get_code_context_exa",
+      "mcp__cipher__cipher_extract_and_operate_memory",
+      "mcp__cipher__cipher_memory_search",
+      "Bash(if exist .githubworkflows dir .githubworkflows /b else echo No workflows directory found)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "disabledMcpjsonServers": [
+    "cipher"
+  ]
 }

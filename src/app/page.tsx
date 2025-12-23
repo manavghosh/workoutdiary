@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Dumbbell, TrendingUp, Calendar } from "lucide-react";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { DashboardLinkButton } from "@/components/DashboardLinkButton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
@@ -17,11 +18,7 @@ export default function Home() {
           </p>
           <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
             <SignedIn>
-              <Link href="/dashboard">
-                <Button size="lg" className="w-full">
-                  Go to Dashboard
-                </Button>
-              </Link>
+              <DashboardLinkButton />
             </SignedIn>
             <SignedOut>
               <Button size="lg" className="w-full" asChild>

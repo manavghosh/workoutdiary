@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CalendarDays, Clock, Save, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BackToDashboardButton } from "@/components/BackToDashboardButton";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +23,7 @@ interface NewWorkoutClientProps {
 export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isNavigating, setIsNavigating] = useState(false);
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [workoutDate, setWorkoutDate] = useState<Date>(selectedDate || new Date());
@@ -41,6 +43,8 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
       return;
     }
 
+    setIsNavigating(true);
+
     startTransition(async () => {
       try {
         // Format date as YYYY-MM-DD for proper parsing
@@ -57,6 +61,9 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
           workoutDate: formattedDate,
           startTime: startTime, // Send the time as selected by user (defaults to current time)
         });
+
+        // Keep loading visible for minimum 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         if (result.success && result.redirectDate) {
           console.log('Workout saved successfully, redirecting...', result);
@@ -75,16 +82,20 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
         } else {
           console.error('Unexpected result from action:', result);
           alert('Workout saved but redirect failed. Please navigate manually.');
+          setIsNavigating(false);
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to create workout');
+        setIsNavigating(false);
       }
     });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <>
+      <LoadingOverlay isLoading={isNavigating} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Back to Dashboard */}
         <BackToDashboardButton />
 
@@ -271,7 +282,8 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
