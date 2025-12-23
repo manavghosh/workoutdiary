@@ -5,8 +5,19 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function BackToDashboardButton() {
+interface BackToDashboardButtonProps {
+  onNavigate?: () => void;
+}
+
+export function BackToDashboardButton({ onNavigate }: BackToDashboardButtonProps) {
   const router = useRouter();
+
+  const handleNavigationWithLoading = () => {
+    if (onNavigate) {
+      onNavigate();
+    }
+    router.push("/dashboard");
+  };
 
   return (
     <Card className="mb-6">
@@ -14,7 +25,7 @@ export function BackToDashboardButton() {
         <Button
           variant="default"
           size="sm"
-          onClick={() => router.push("/dashboard")}
+          onClick={handleNavigationWithLoading}
           aria-label="Navigate back to workout dashboard"
           className="transition-all duration-300 hover:scale-105"
         >
