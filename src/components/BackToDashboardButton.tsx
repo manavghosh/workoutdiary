@@ -1,22 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface BackToDashboardButtonProps {
   onNavigate?: () => void;
+  workoutDate?: Date;
 }
 
-export function BackToDashboardButton({ onNavigate }: BackToDashboardButtonProps) {
+export function BackToDashboardButton({ onNavigate, workoutDate }: BackToDashboardButtonProps) {
   const router = useRouter();
 
   const handleNavigationWithLoading = () => {
     if (onNavigate) {
       onNavigate();
     }
-    router.push("/dashboard");
+
+    // If workoutDate is provided, navigate to dashboard with date parameter
+    if (workoutDate) {
+      const formattedDate = format(workoutDate, "yyyy-MM-dd");
+      router.push(`/dashboard?date=${formattedDate}`);
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   return (
