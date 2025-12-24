@@ -3,7 +3,6 @@
   "outputDirectory": ".next",
   "installCommand": "npm ci",
   "framework": "nextjs",
-  "ignoreCommand": "exit 1",
   "regions": ["iad1"],
   "functions": {
     "app/**/*.ts": {
