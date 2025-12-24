@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import { format } from 'date-fns'
 import { ArrowLeft, Edit, Save, Trash2, Play, Clock, Calendar, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BackToDashboardButton } from '@/components/BackToDashboardButton'
@@ -86,8 +87,9 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
         const result = await deleteWorkoutAction(workout.id)
 
         if (result.success) {
-          // Redirect to dashboard after successful deletion
-          router.push('/dashboard')
+          // Redirect to dashboard with the workout's date after successful deletion
+          const formattedDate = format(workout.startedAt, "yyyy-MM-dd")
+          router.push(`/dashboard?date=${formattedDate}`)
         } else {
           alert('Failed to delete workout')
           setIsNavigating(false)
@@ -142,7 +144,10 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Back to Dashboard */}
-        <BackToDashboardButton onNavigate={() => setIsNavigating(true)} />
+        <BackToDashboardButton
+          onNavigate={() => setIsNavigating(true)}
+          workoutDate={workout.startedAt}
+        />
 
         {/* Header */}
         <Card className="mb-6">
