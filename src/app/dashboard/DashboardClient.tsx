@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useTransition } from "react";
 import { format } from 'date-fns'
 import { formatTimestampForDisplay } from '@/lib/utils';
 import { ChevronRight, Plus, Dumbbell, Calendar as CalendarIcon, Clock, BarChart3 } from "lucide-react";
@@ -51,7 +51,7 @@ export default function DashboardClient({
   selectedDate
 }: DashboardClientProps) {
   const router = useRouter();
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Use selectedDate prop directly, fallback to today if null
   const displayDate = selectedDate || new Date();
@@ -61,25 +61,30 @@ export default function DashboardClient({
     if (date) {
       const formattedDate = format(date, "yyyy-MM-dd");
       // Navigate to new URL with proper Next.js router to trigger server-side data fetching
-      router.push(`/dashboard?date=${formattedDate}`);
+      startTransition(() => {
+        router.push(`/dashboard?date=${formattedDate}`);
+      });
     }
   };
 
   // Handle "Today" button click
   const handleTodayClick = () => {
     // Navigate to dashboard base URL to get fresh server data for today
-    router.push("/dashboard");
+    startTransition(() => {
+      router.push("/dashboard");
+    });
   };
 
   // Handle navigation with loading overlay
   const handleNavigationWithLoading = (path: string) => {
-    setIsNavigating(true);
-    router.push(path);
+    startTransition(() => {
+      router.push(path);
+    });
   };
 
   return (
     <>
-      <LoadingOverlay isLoading={isNavigating} />
+      <LoadingOverlay isLoading={isPending} />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header with Date Picker */}
