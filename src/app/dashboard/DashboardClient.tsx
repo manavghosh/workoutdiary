@@ -59,6 +59,7 @@ export default function DashboardClient({
   // Handle date selection - using ordinal format for consistency
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
+      setIsNavigating(true);
       const formattedDate = format(date, "yyyy-MM-dd");
       // Navigate to new URL with proper Next.js router to trigger server-side data fetching
       router.push(`/dashboard?date=${formattedDate}`);
@@ -67,6 +68,7 @@ export default function DashboardClient({
 
   // Handle "Today" button click
   const handleTodayClick = () => {
+    setIsNavigating(true);
     // Navigate to dashboard base URL to get fresh server data for today
     router.push("/dashboard");
   };
