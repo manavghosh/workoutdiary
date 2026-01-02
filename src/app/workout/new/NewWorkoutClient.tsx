@@ -10,8 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
+import { DatePicker } from "@/components/ui/date-picker";
 import { formatDateWithOrdinal } from "@/lib/utils";
 import { createWorkoutAction } from "./action";
 
@@ -35,7 +35,6 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
   };
 
   const [startTime, setStartTime] = useState(getCurrentTimeString());
-  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleSaveWorkout = () => {
     if (!title.trim()) {
@@ -154,34 +153,16 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCalendar(!showCalendar)}
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarDays className="mr-2 h-4 w-4" />
-                  {formatDateWithOrdinal(workoutDate)}
-                </Button>
-
-                {showCalendar && (
-                  <div className="border rounded-lg p-2 bg-background">
-                    <Calendar
-                      selected={workoutDate}
-                      onSelect={(date) => {
-                        if (date) {
-                          setWorkoutDate(date);
-                          setShowCalendar(false);
-                        }
-                      }}
-                      defaultMonth={workoutDate}
-                      disabled={(date) => {
-                        // Disable dates in the future
-                        return date > new Date();
-                      }}
-                      className="w-full"
-                    />
-                  </div>
-                )}
+                <DatePicker
+                  date={workoutDate}
+                  onDateChange={(date) => {
+                    if (date) {
+                      setWorkoutDate(date)
+                    }
+                  }}
+                  disabled={(date) => date > new Date()}
+                  className="w-full"
+                />
 
                 <Badge variant="secondary" className="text-xs">
                   {workoutDate.toLocaleDateString('en-US', {
