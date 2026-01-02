@@ -7,8 +7,7 @@ import { ChevronRight, Plus, Dumbbell, Calendar as CalendarIcon, Clock, BarChart
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
+import { DatePicker } from "@/components/ui/date-picker";
 import { formatDateWithOrdinal } from "@/lib/utils";
 import { StatCard } from "@/components/StatCard";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
@@ -52,7 +51,6 @@ export default function DashboardClient({
   selectedDate
 }: DashboardClientProps) {
   const router = useRouter();
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
 
   // Use selectedDate prop directly, fallback to today if null
@@ -64,8 +62,6 @@ export default function DashboardClient({
       const formattedDate = format(date, "yyyy-MM-dd");
       // Navigate to new URL with proper Next.js router to trigger server-side data fetching
       router.push(`/dashboard?date=${formattedDate}`);
-      // Close dialog immediately after date selection
-      setShowDatePicker(false);
     }
   };
 
@@ -114,45 +110,12 @@ export default function DashboardClient({
               </div>
 
               <div suppressHydrationWarning>
-              <Dialog open={showDatePicker} onOpenChange={setShowDatePicker}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="min-w-[200px] justify-between" suppressHydrationWarning>
-                    <span className="font-medium">
-                      {formatDateWithOrdinal(displayDate)}
-                    </span>
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-sm p-0">
-                  <DialogHeader className="p-6 pb-2">
-                    <DialogTitle className="text-center">Select Date</DialogTitle>
-                  </DialogHeader>
-                  <div className="p-6">
-                    <div className="flex justify-between mb-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleTodayClick}
-                      >
-                        Today
-                      </Button>
-                      <div className="text-xs text-muted-foreground">
-                        {format(displayDate, "MMMM yyyy")}
-                      </div>
-                    </div>
-                    <Calendar
-                      selected={displayDate}
-                      onSelect={handleDateSelect}
-                      disabled={(date) => {
-                        // Disable dates in the future
-                        return date > new Date();
-                      }}
-                      defaultMonth={displayDate}
-                      className="mx-auto"
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
+                <DatePicker
+                  date={displayDate}
+                  onDateChange={handleDateSelect}
+                  disabled={(date) => date > new Date()}
+                  className="min-w-[200px]"
+                />
               </div>
             </div>
           </CardContent>
