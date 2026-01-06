@@ -8,7 +8,9 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import "./globals.css";
@@ -28,11 +30,13 @@ export const metadata: Metadata = {
   description: "Track your workouts and fitness progress",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await currentUser();
+
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
@@ -63,7 +67,18 @@ export default function RootLayout({
                     </Button>
                   </SignedOut>
                   <SignedIn>
-                    <UserButton afterSignOutUrl="/" />
+                    <div className="flex flex-col items-end gap-2">
+                      <UserButton afterSignOutUrl="/" />
+                      {user && (
+                        <Card className="shadow-sm">
+                          <CardContent className="p-2">
+                            <p className="text-sm font-medium">
+                              Welcome, {user.firstName || user.emailAddresses[0]?.emailAddress || 'User'}!
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </div>
                   </SignedIn>
                 </div>
               </div>
