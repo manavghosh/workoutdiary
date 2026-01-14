@@ -6,7 +6,6 @@ import { format } from 'date-fns'
 import { ArrowLeft, Edit, Save, Trash2, Play, Clock, Calendar, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { BackToDashboardButton } from '@/components/BackToDashboardButton'
-import { LoadingOverlay } from '@/components/LoadingOverlay'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -29,7 +28,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showCompleteDialog, setShowCompleteDialog] = useState(false)
-  const [isNavigating, setIsNavigating] = useState(false)
 
   // Edit state
   const [editTitle, setEditTitle] = useState(workoutData.workout.title)
@@ -47,8 +45,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       alert('Workout title is required')
       return
     }
-
-    setIsNavigating(true)
 
     startTransition(async () => {
       try {
@@ -73,15 +69,11 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to update workout')
-      } finally {
-        setIsNavigating(false)
       }
     })
   }
 
   const handleDeleteWorkout = () => {
-    setIsNavigating(true)
-
     startTransition(async () => {
       try {
         const result = await deleteWorkoutAction(workout.id)
@@ -92,11 +84,9 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
           router.push(`/dashboard?date=${formattedDate}`)
         } else {
           alert('Failed to delete workout')
-          setIsNavigating(false)
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to delete workout')
-        setIsNavigating(false)
       }
     })
   }
@@ -108,8 +98,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
       alert('Please enter a valid duration')
       return
     }
-
-    setIsNavigating(true)
 
     startTransition(async () => {
       try {
@@ -125,8 +113,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
         }
       } catch (error) {
         alert(error instanceof Error ? error.message : 'Failed to complete workout')
-      } finally {
-        setIsNavigating(false)
       }
     })
   }
@@ -139,13 +125,10 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
   }
 
   return (
-    <>
-      <LoadingOverlay isLoading={isNavigating} />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Back to Dashboard */}
         <BackToDashboardButton
-          onNavigate={() => setIsNavigating(true)}
           workoutDate={workout.startedAt}
         />
 
@@ -437,7 +420,6 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
           </Card>
         )}
         </div>
-      </div>
-    </>
+    </div>
   )
 }
