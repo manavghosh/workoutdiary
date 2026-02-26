@@ -155,7 +155,7 @@ export default function DashboardClient({
 
         {/* Workouts List */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4" suppressHydrationWarning>
             Workouts for {formatDateWithOrdinal(displayDate)}
           </h2>
 
@@ -183,9 +183,9 @@ export default function DashboardClient({
                       {workout.title}
                     </h3>
                     <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                      <span>Started: {formatTimestampForDisplay(workout.startedAt, "h:mm a")}</span>
+                      <span suppressHydrationWarning>Started: {formatTimestampForDisplay(workout.startedAt, "h:mm a")}</span>
                       {workout.completedAt && (
-                        <span>
+                        <span suppressHydrationWarning>
                           Completed: {formatTimestampForDisplay(workout.completedAt, "h:mm a")}
                         </span>
                       )}
