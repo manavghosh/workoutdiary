@@ -6,11 +6,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDateWithOrdinal(date: Date): string {
-  const day = date.getDate();
+export function formatDateWithOrdinal(date: Date | string): string {
+  const d = date instanceof Date ? date : new Date(date);
+  const day = d.getDate();
   const suffix = getOrdinalSuffix(day);
 
-  return `${day}${suffix} ${format(date, 'MMMM yyyy')}`;
+  return `${day}${suffix} ${format(d, 'MMMM yyyy')}`;
 }
 
 function getOrdinalSuffix(day: number): string {
@@ -74,7 +75,5 @@ export function parseURLDate(dateString: string): Date {
 // Format UTC timestamp for display in user's local timezone
 export function formatTimestampForDisplay(timestamp: Date | string, formatStr: string): string {
   const date = new Date(timestamp);
-  // For now, just format using the user's system timezone
-  // TODO: Add proper timezone handling when needed
   return format(date, formatStr);
 }

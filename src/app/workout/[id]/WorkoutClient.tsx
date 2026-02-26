@@ -175,11 +175,11 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
                     )}
                   </CardTitle>
                   <CardDescription className="flex items-center gap-4 mt-1">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1" suppressHydrationWarning>
                       <Calendar className="w-4 h-4" />
                       {formatDateWithOrdinal(workout.startedAt)}
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1" suppressHydrationWarning>
                       <Clock className="w-4 h-4" />
                       {formatTimestampForDisplay(workout.startedAt, 'h:mm a')}
                     </div>
@@ -425,7 +425,7 @@ export default function WorkoutClient({ workoutData }: WorkoutClientProps) {
                 <CheckCircle className="w-5 h-5" />
                 <span className="font-semibold">Workout Completed</span>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1" suppressHydrationWarning>
                 Completed on {formatDateWithOrdinal(workout.completedAt)} at {formatTimestampForDisplay(workout.completedAt, 'h:mm a')}
                 {workout.durationMinutes && (
                   <>

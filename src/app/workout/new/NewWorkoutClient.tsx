@@ -46,19 +46,24 @@ export default function NewWorkoutClient({ userId, selectedDate }: NewWorkoutCli
 
     startTransition(async () => {
       try {
-        // Format date as YYYY-MM-DD for proper parsing
-        const formattedDate = workoutDate.getFullYear() + '-' +
-          String(workoutDate.getMonth() + 1).padStart(2, '0') + '-' +
-          String(workoutDate.getDate()).padStart(2, '0');
-
-        console.log('Formatted date for action:', formattedDate);
-        console.log('Start time for action:', startTime);
+        // Build a Date in the user's local timezone using the selected date and time,
+        // then convert to a UTC ISO string so the server stores the correct moment.
+        const [hours, minutes] = startTime.split(':').map(Number);
+        const localDateTime = new Date(
+          workoutDate.getFullYear(),
+          workoutDate.getMonth(),
+          workoutDate.getDate(),
+          hours,
+          minutes,
+          0,
+          0
+        );
+        const startedAtISO = localDateTime.toISOString();
 
         const result = await createWorkoutAction({
           title: title.trim(),
           notes: notes.trim() || undefined,
-          workoutDate: formattedDate,
-          startTime: startTime, // Send the time as selected by user (defaults to current time)
+          startedAtISO,
         });
 
         if (result.success && result.redirectDate) {
