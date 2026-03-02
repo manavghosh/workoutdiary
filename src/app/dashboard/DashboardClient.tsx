@@ -1,18 +1,20 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { format } from 'date-fns'
 import { formatTimestampForDisplay } from '@/lib/utils';
-import { ChevronRight, Plus, Dumbbell, Calendar as CalendarIcon, Clock, BarChart3 } from "lucide-react";
+import { Plus, Dumbbell, Calendar as CalendarIcon, Clock, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DatePicker } from "@/components/ui/date-picker";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatDateWithOrdinal } from "@/lib/utils";
 import { StatCard } from "@/components/StatCard";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { useRouter } from "next/navigation";
 import type { WorkoutExercise, Exercise, ExerciseSet } from "@/db/schema";
+import { deleteWorkoutAction } from "./action";
 
 // Type for workout with related data
 interface WorkoutWithDetails extends Workout {
@@ -52,6 +54,8 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [workoutToDelete, setWorkoutToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Use selectedDate prop directly, fallback to today if null
   const displayDate = selectedDate || new Date();
@@ -79,6 +83,26 @@ export default function DashboardClient({
   const handleNavigationWithLoading = (path: string) => {
     startTransition(() => {
       router.push(path);
+    });
+  };
+
+  // Handle workout deletion
+  const handleDeleteWorkout = () => {
+    if (!workoutToDelete) return;
+
+    setIsDeleting(true);
+    startTransition(async () => {
+      try {
+        const result = await deleteWorkoutAction(workoutToDelete.id);
+        if (result.success) {
+          setWorkoutToDelete(null);
+          router.refresh();
+        }
+      } catch (error) {
+        alert(error instanceof Error ? error.message : 'Failed to delete workout');
+      } finally {
+        setIsDeleting(false);
+      }
     });
   };
 
@@ -200,7 +224,11 @@ export default function DashboardClient({
                     >
                       Edit
                     </Button>
-                    <Button variant="destructive" size="sm">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setWorkoutToDelete({ id: workout.id, title: workout.title })}
+                    >
                       Delete
                     </Button>
                   </div>
@@ -248,6 +276,34 @@ export default function DashboardClient({
         </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!workoutToDelete} onOpenChange={(open) => { if (!open) setWorkoutToDelete(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Workout</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot;{workoutToDelete?.title}&quot;? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setWorkoutToDelete(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteWorkout}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
