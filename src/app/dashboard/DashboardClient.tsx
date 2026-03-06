@@ -116,7 +116,7 @@ export default function DashboardClient({
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-3xl">
-                Workout Dashboard
+                Workout Ledger
               </CardTitle>
               <Button onClick={() => {
                 const formattedDate = format(displayDate, "yyyy-MM-dd");
