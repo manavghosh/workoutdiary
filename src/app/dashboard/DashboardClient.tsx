@@ -115,8 +115,9 @@ export default function DashboardClient({
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-3xl">
+              <CardTitle className="text-3xl" suppressHydrationWarning>
                 Workout Dashboard
+                <span className="text-muted-foreground text-xl ml-3">— {format(displayDate, 'EEEE')}</span>
               </CardTitle>
               <Button onClick={() => {
                 const formattedDate = format(displayDate, "yyyy-MM-dd");
